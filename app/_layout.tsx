@@ -77,6 +77,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const { isLoaded, isSignedIn } = useAuth();
+  console.log(isSignedIn ? "☘️ User is in" : "🍁 No user");
   const colorScheme = useColorScheme();
   const router = useRouter();
 
@@ -89,8 +90,6 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="listing/[id]" options={{ headerTitle: "" }} />
         <Stack.Screen
           name="(modals)/login"
           options={{
@@ -108,6 +107,9 @@ function RootLayoutNav() {
             ),
           }}
         />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="listing/[id]" options={{ headerTitle: "" }} />
+
         <Stack.Screen
           name="(modals)/booking"
           options={{

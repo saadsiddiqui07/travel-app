@@ -8,7 +8,6 @@ import Colors from "../../constants/Colors";
 const Layout = () => {
   return (
     <Tabs
-      initialRouteName="index"
       screenOptions={{
         tabBarActiveTintColor: Colors.primary,
         tabBarLabelStyle: {
@@ -19,6 +18,7 @@ const Layout = () => {
       <Tabs.Screen
         name="index"
         options={{
+          headerShown: false,
           tabBarLabel: "Explore",
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="search" size={size} color={color} />
@@ -61,7 +61,6 @@ const Layout = () => {
         options={{
           tabBarLabel: "Profile",
 
-          headerShown: false,
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="person-circle-outline" size={size} color={color} />
           ),

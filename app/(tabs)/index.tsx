@@ -1,14 +1,16 @@
 import { View, Text, Button } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
+import { Stack } from "expo-router";
+import ExploreHeader from "../../components/ExploreHeader";
+import Listings from "../../components/Listings";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Page = () => {
   return (
-    <View>
-      <Link href={"/(modals)/login"}>Login</Link>
-      <Link href={"/(modals)/booking"}>Booking</Link>
-      <Link href={"/listing/124"}>Listing</Link>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ExploreHeader />
+      <Listings />
+    </SafeAreaView>
   );
 };
 

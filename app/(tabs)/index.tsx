@@ -7,9 +7,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const Page = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <ExploreHeader />
-      <Listings />
+      {/* <Listings /> */}
     </SafeAreaView>
   );
 };

@@ -6,46 +6,67 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { useRouter } from "expo-router";
 
+interface Category {
+  id: number;
+  name: string;
+  icon: string;
+}
+
 const categories = [
   {
+    id: 1,
     name: "Tiny homes",
     icon: "home",
   },
   {
+    id: 2,
     name: "Cabins",
     icon: "house-siding",
   },
   {
+    id: 3,
     name: "Trending",
     icon: "local-fire-department",
   },
   {
+    id: 4,
     name: "Play",
     icon: "videogame-asset",
   },
   {
+    id: 5,
     name: "City",
     icon: "apartment",
   },
   {
+    id: 6,
     name: "Beachfront",
     icon: "beach-access",
   },
   {
+    id: 7,
     name: "Countryside",
     icon: "nature-people",
   },
 ];
 
-const ExploreHeader = () => {
-  const router = useRouter();
+interface Props {
+  onCategoryChange: (category: string) => void;
+}
 
-  const [selected, setSelected] = useState<any>();
+const ExploreHeader = ({ onCategoryChange }: Props) => {
+  const router = useRouter();
+  const [selected, setSelected] = useState<Category>(categories[0]);
+
+  const handleSelectCategory = (category: Category) => {
+    setSelected(category);
+    onCategoryChange(category.name);
+  };
 
   return (
     <View style={{ backgroundColor: "#fff" }}>
@@ -84,18 +105,25 @@ const ExploreHeader = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
         >
-          {categories.map((item, index) => (
-            <TouchableOpacity key={index} style={styles.category}>
-              <MaterialIcons
-                name={item.icon as any}
-                size={24}
-                color={Colors.grey}
-              />
-              <Text style={{ color: "black", fontSize: 12, fontWeight: "700" }}>
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          {categories.map((item, index) => {
+            const isActive = selected?.name === item.name;
+            return (
+              <TouchableOpacity
+                key={index}
+                style={isActive ? styles.categoriesBtnActive : styles.category}
+                onPress={() => handleSelectCategory(item)}
+              >
+                <MaterialIcons
+                  name={item.icon as any}
+                  size={24}
+                  color={isActive ? "#000" : Colors.grey}
+                />
+                <Text style={isActive ? styles.textActive : styles.text}>
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
       </View>
     </View>
@@ -150,4 +178,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingBottom: 8,
   },
+  categoriesBtnActive: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    // borderBottomColor: "#000",
+    borderBottomColor: Colors.primary,
+    borderBottomWidth: 2,
+    paddingBottom: 8,
+  },
+  text: { color: "black", fontSize: 12, fontWeight: "700" },
+  textActive: { color: "#000", fontSize: 12, fontWeight: "700" },
 });

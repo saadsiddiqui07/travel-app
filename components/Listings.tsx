@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
-import { Link } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "expo-router";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
+import { FlashList, FlashListProps } from "@shopify/flash-list";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface Props {
   listings: any[];
@@ -17,116 +19,86 @@ interface Props {
 }
 
 const Listings = ({ listings, category }: Props) => {
+  const router = useRouter();
+  const listRef = useRef<FlashList<any>>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
+  }, [category]);
+
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      <FlatList
+      <FlashList
+        ref={listRef}
         showsVerticalScrollIndicator={false}
-        data={listings}
+        data={loading ? [] : listings}
+        estimatedItemSize={160}
         renderItem={({ item, index }) => (
-          <Link href={`/listing/${item.id}`} asChild={true}>
-            <View style={styles.listing}>
-              <TouchableOpacity>
-                <Image source={{ uri: item.medium_url }} style={styles.image} />
-                <TouchableOpacity
-                  style={{ position: "absolute", right: 20, top: 20 }}
-                >
-                  <Ionicons name="heart-outline" size={24} color="#000" />
-                </TouchableOpacity>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginTop: 2,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      fontWeight: "900",
-                      color: Colors.grey,
-                    }}
-                  >
-                    {item.name}
-                  </Text>
-                  <View style={{ flexDirection: "row", gap: 4 }}>
-                    <Ionicons name="star" size={16} color={"gold"} />
-                    <Text style={{ fontWeight: "600" }}>
-                      {item.review_scores_rating / 20}
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginVertical: 1,
-                  }}
-                >
-                  <Ionicons name="location-outline" size={15} color={"gray"} />
-                  <Text
-                    style={{ fontWeight: "600", color: "gray", fontSize: 13 }}
-                  >
-                    {item.city}, {item.country}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
-                      }}
-                    >
-                      <Ionicons
-                        name="bed-outline"
-                        size={18}
-                        color={Colors.grey}
-                      />
-                      <Text style={{ fontWeight: "800" }}>{item.beds}</Text>
-                    </View>
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        color: "gray",
-                        fontWeight: "800",
-                        marginHorizontal: 10,
-                      }}
-                    >
-                      |
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
-                      }}
-                    >
-                      <MaterialCommunityIcons
-                        name="shower"
-                        size={18}
-                        color={Colors.grey}
-                      />
-                      <Text style={{ fontWeight: "800" }}>
-                        {item.bathrooms}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={{ flexDirection: "row", gap: 4 }}>
-                    <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-                      € {item.price} night
-                    </Text>
-                  </View>
-                </View>
+          // <Link href={`/listing/${item.id}`} asChild={true}>
+          <Animated.View
+            style={styles.listing}
+            entering={FadeIn}
+            exiting={FadeOut}
+          >
+            <TouchableOpacity
+              onPress={() => router.push(`/listing/${item.id}`)}
+            >
+              <Image
+                source={{ uri: item.thumbnail_url }}
+                style={styles.image}
+              />
+              <TouchableOpacity style={styles.favouriteBtn}>
+                <Ionicons name="heart-outline" size={22} color="#000" />
               </TouchableOpacity>
-            </View>
-          </Link>
+              <View style={styles.titleHeader}>
+                <Text style={styles.title}>{item.name}</Text>
+                <View style={{ flexDirection: "row", gap: 4 }}>
+                  <Ionicons name="star" size={16} color={"gold"} />
+                  <Text style={{ fontWeight: "600" }}>
+                    {item.review_scores_rating / 20}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.location}>
+                <Ionicons name="location-outline" size={15} color={"gray"} />
+                <Text style={styles.locationText}>
+                  {item.city}, {item.country}
+                </Text>
+              </View>
+              <View style={styles.roomDetails}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={styles.roomInfo}>
+                    <Ionicons
+                      name="bed-outline"
+                      size={18}
+                      color={Colors.grey}
+                    />
+                    <Text style={{ fontWeight: "800" }}>{item.beds}</Text>
+                  </View>
+                  <Text style={styles.divider}>|</Text>
+                  <View style={styles.roomInfo}>
+                    <MaterialCommunityIcons
+                      name="shower"
+                      size={18}
+                      color={Colors.grey}
+                    />
+                    <Text style={{ fontWeight: "800" }}>{item.bathrooms}</Text>
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row", gap: 4 }}>
+                  <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                    € {item.price} night
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+          // </Link>
         )}
       />
     </View>
@@ -141,5 +113,45 @@ const styles = StyleSheet.create({
     gap: 10,
     marginVertical: 16,
   },
-  image: { height: 250, width: "100%", borderRadius: 20 },
+  image: { height: 250, width: "100%", borderRadius: 20, objectFit: "cover" },
+  favouriteBtn: {
+    position: "absolute",
+    right: 20,
+    top: 20,
+    backgroundColor: "white",
+    borderRadius: 30,
+    padding: 5,
+  },
+  titleHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 2,
+  },
+  title: {
+    fontSize: 15,
+    fontWeight: "900",
+    color: Colors.grey,
+  },
+  location: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 1,
+  },
+  locationText: { fontWeight: "600", color: "gray", fontSize: 13 },
+  roomDetails: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  roomInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  divider: {
+    fontSize: 18,
+    color: "gray",
+    fontWeight: "800",
+    marginHorizontal: 10,
+  },
 });

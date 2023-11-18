@@ -6,9 +6,15 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
-import { useLocalSearchParams } from "expo-router";
-import Animated, { SlideInDown } from "react-native-reanimated";
+import React, { useLayoutEffect } from "react";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import Animated, {
+  SlideInDown,
+  interpolate,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useScrollViewOffset,
+} from "react-native-reanimated";
 import listingsData from "../../assets/data/airbnb-listings.json";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
@@ -20,13 +26,78 @@ const FOOTER_HEIGHT = height / 10;
 const Page = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const listing = (listingsData as any[]).find((item) => item.id === id);
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollOffset = useScrollViewOffset(scrollRef);
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "",
+      headerTransparent: true,
+      headerBackground: () => (
+        <Animated.View
+          style={[animatedHeaderStyle, styles.header]}
+        ></Animated.View>
+      ),
+      headerRight: () => (
+        <View style={styles.bar}>
+          <TouchableOpacity style={styles.roundButton}>
+            <Ionicons name="share-outline" size={22} color={"#000"} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.roundButton}>
+            <Ionicons name="heart-outline" size={22} color={"#000"} />
+          </TouchableOpacity>
+        </View>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity
+          style={styles.roundButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back" size={24} color={"#000"} />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
+  const animatedHeaderStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
+    };
+  });
+
+  const animtedImageStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            scrollOffset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT, IMG_HEIGHT],
+            [-IMG_HEIGHT / 5, 0, IMG_HEIGHT * 0.1]
+          ),
+        },
+        {
+          scale: interpolate(
+            scrollOffset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [2, 1, 1]
+          ),
+        },
+      ],
+    };
+  });
 
   return (
     <View style={styles.container}>
-      <Animated.ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+      <Animated.ScrollView
+        ref={scrollRef}
+        scrollEventThrottle={16}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
         <Animated.Image
           source={{ uri: listing.xl_picture_url }}
-          style={{ height: IMG_HEIGHT, width }}
+          style={[styles.image, animtedImageStyle]}
+          resizeMode="cover"
         />
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{listing.name}</Text>
@@ -111,11 +182,10 @@ const Page = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#FAF9F6",
+    backgroundColor: "#fff",
   },
   infoContainer: {
     padding: 24,
-    // backgroundColor: "#fff",
   },
   name: {
     fontSize: 25,
@@ -131,6 +201,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     fontWeight: "800",
   },
+  image: { height: IMG_HEIGHT, width },
   ratings: {
     fontSize: 15,
   },
@@ -180,12 +251,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10,
   },
-  // header: {
-  //   backgroundColor: "#fff",
-  //   height: 100,
-  //   borderBottomWidth: StyleSheet.hairlineWidth,
-  //   borderColor: Colors.grey,
-  // },
+  header: {
+    backgroundColor: "#fff",
+    height: 100,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: Colors.grey,
+  },
 
   description: {
     fontSize: 15,

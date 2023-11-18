@@ -47,6 +47,7 @@ const Listings = ({ listings, category }: Props) => {
           >
             <TouchableOpacity
               onPress={() => router.push(`/listing/${item.id}`)}
+              // onPress={() => console.log(item.id)}
             >
               <Image
                 source={{ uri: item.thumbnail_url }}

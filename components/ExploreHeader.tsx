@@ -56,7 +56,7 @@ const categories = [
 ];
 
 interface Props {
-  onCategoryChange: (category: string) => void;
+  onCategoryChange?: (category: string) => void;
 }
 
 const ExploreHeader = ({ onCategoryChange }: Props) => {
@@ -65,7 +65,7 @@ const ExploreHeader = ({ onCategoryChange }: Props) => {
 
   const handleSelectCategory = (category: Category) => {
     setSelected(category);
-    onCategoryChange(category.name);
+    // onCategoryChange!(category.name);
   };
 
   return (

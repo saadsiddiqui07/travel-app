@@ -7,6 +7,7 @@ import listingsDataGeo from "../../assets/data/airbnb-listings.geo.json";
 import { StatusBar } from "expo-status-bar";
 import ListingsMap from "../../components/ListingsMap";
 import ListingsBottomSheet from "../../components/ListingsBottomSheet";
+import Listings from "../../components/Listings";
 
 const Page = () => {
   const [category, setCategory] = useState<any>();
@@ -19,9 +20,15 @@ const Page = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView
+      edges={["top"]}
+      style={{
+        flex: 1,
+      }}
+    >
+      {/* <Listings listings={items} category={category} /> */}
       <ListingsMap listings={getoItems} />
-      <ListingsBottomSheet category={category} listings={items} />
+      {/* <ListingsBottomSheet category={category} listings={items} /> */}
     </SafeAreaView>
   );
 };

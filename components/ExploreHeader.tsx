@@ -182,7 +182,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // borderBottomColor: "#000",
     borderBottomColor: Colors.primary,
     borderBottomWidth: 2,
     paddingBottom: 8,

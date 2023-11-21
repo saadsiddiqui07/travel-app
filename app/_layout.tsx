@@ -122,6 +122,7 @@ function RootLayoutNav() {
           options={{
             presentation: "transparentModal",
             animation: "fade",
+            headerTransparent: true,
             headerTitleStyle: {
               fontWeight: "700",
             },

@@ -1,10 +1,11 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { useAuth } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 
 const Profile = () => {
   const { isSignedIn, signOut } = useAuth();
+  const { user } = useUser();
 
   return (
     <View>

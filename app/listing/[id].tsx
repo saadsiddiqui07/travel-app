@@ -18,6 +18,7 @@ import Animated, {
 import listingsData from "../../assets/data/airbnb-listings.json";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
+import { StatusBar } from "expo-status-bar";
 
 const { width, height } = Dimensions.get("window");
 const IMG_HEIGHT = height / 3;
@@ -35,9 +36,9 @@ const Page = () => {
       headerTitle: "",
       headerTransparent: true,
       headerBackground: () => (
-        <Animated.View
-          style={[animatedHeaderStyle, styles.header]}
-        ></Animated.View>
+        <Animated.View style={[animatedHeaderStyle, styles.header]}>
+          <StatusBar style="dark" />
+        </Animated.View>
       ),
       headerRight: () => (
         <View style={styles.bar}>

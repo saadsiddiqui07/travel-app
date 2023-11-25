@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import Colors from "../../constants/Colors";
 import ExploreHeader from "../../components/ExploreHeader";
+import { StatusBar } from "react-native";
 
 const Layout = () => {
   return (
@@ -19,7 +20,9 @@ const Layout = () => {
       <Tabs.Screen
         name="index"
         options={{
+          headerStatusBarHeight: StatusBar.currentHeight,
           header: () => <ExploreHeader />,
+
           tabBarLabel: "Explore",
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="search" size={size} color={color} />

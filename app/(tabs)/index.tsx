@@ -1,13 +1,11 @@
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, StatusBar } from "react-native";
 import React, { useCallback, useMemo, useState } from "react";
 import ExploreHeader from "../../components/ExploreHeader";
-import { SafeAreaView } from "react-native-safe-area-context";
 import listingsData from "../../assets/data/airbnb-listings.json";
 import listingsDataGeo from "../../assets/data/airbnb-listings.geo.json";
-import { StatusBar } from "expo-status-bar";
 import ListingsMap from "../../components/ListingsMap";
 import ListingsBottomSheet from "../../components/ListingsBottomSheet";
-import Listings from "../../components/Listings";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Page = () => {
   const [category, setCategory] = useState<any>();
@@ -21,9 +19,10 @@ const Page = () => {
 
   return (
     <SafeAreaView
-      edges={["top"]}
+    edges={['top']}
       style={{
         flex: 1,
+        marginTop: StatusBar.currentHeight,
       }}
     >
       {/* <Listings listings={items} category={category} /> */}

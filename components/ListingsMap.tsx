@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import MapView, { Marker, Callout } from "react-native-maps";
+import MapView, { Marker, Callout, PROVIDER_GOOGLE } from "react-native-maps";
 import { useRouter } from "expo-router";
 
 interface Props {
@@ -17,10 +17,12 @@ const ListingsMap = ({ listings }: Props) => {
     latitudeDelta: 9,
     longitudeDelta: 9,
   };
+  console.log(JSON.stringify(listings.features[0], null, 2))
   return (
     <View style={styles.container}>
-      <MapView style={StyleSheet.absoluteFill}>
-        {listings.features.map((item: any) => (
+      <MapView style={StyleSheet.absoluteFill}  provider={PROVIDER_GOOGLE} showsMyLocationButton>
+        {listings.features.map((item: any) => {
+          return  (
           <Marker
             coordinate={{
               latitude: +item.properties.latitude!,
@@ -29,13 +31,14 @@ const ListingsMap = ({ listings }: Props) => {
             tappable={true}
             key={item.properties.id}
           >
-            <Callout onPress={() => push(`/listing/${item.properties.id}`)}>
+            <Callout  onPress={() => push(`/listing/${item.properties.id}`)}>
               <TouchableOpacity style={styles.marker}>
                 <Text style={styles.markerText}>€ {item.properties.price}</Text>
               </TouchableOpacity>
             </Callout>
           </Marker>
-        ))}
+        )
+        })}
       </MapView>
     </View>
   );
@@ -53,11 +56,12 @@ const styles = StyleSheet.create({
   },
   marker: {
     padding: 8,
+    width:100,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#fff",
     elevation: 5,
-    borderRadius: 12,
+    // borderRadius: 12,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -69,4 +73,7 @@ const styles = StyleSheet.create({
   markerText: {
     fontSize: 14,
   },
+  hotel: {
+    width: 400
+  }
 });

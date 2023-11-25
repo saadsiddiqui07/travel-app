@@ -8,9 +8,17 @@ import {
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { TouchableOpacity, useColorScheme } from "react-native";
+import {
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
+import Colors from "../constants/Colors";
+import ModalHeaderText from "../components/ModalHeaderText";
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -77,7 +85,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const { isLoaded, isSignedIn } = useAuth();
-  console.log(isSignedIn ? "☘️ User is in" : "🍁 No user");
+  console.log(Platform.OS, isSignedIn ? "☘️ User is in" : "🍁 No user");
   const colorScheme = useColorScheme();
   const router = useRouter();
 
@@ -123,13 +131,19 @@ function RootLayoutNav() {
             presentation: "transparentModal",
             animation: "fade",
             headerTransparent: true,
-            headerTitleStyle: {
-              fontWeight: "700",
-            },
-            headerTitleAlign: "center",
+            headerTitle: () => <ModalHeaderText />,
             headerLeft: () => (
-              <TouchableOpacity onPress={() => router.back()}>
-                <Ionicons name="close-outline" size={28} />
+              <TouchableOpacity
+                onPress={() => router.back()}
+                style={{
+                  backgroundColor: "#fff",
+                  borderColor: Colors.grey,
+                  borderRadius: 20,
+                  borderWidth: 1,
+                  padding: 4,
+                }}
+              >
+                <Ionicons name="close-outline" size={22} />
               </TouchableOpacity>
             ),
           }}
